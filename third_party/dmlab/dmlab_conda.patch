@@ -1,0 +1,114 @@
+diff --git a/BUILD b/BUILD
+index a7a5d43..3870e7f 100644
+--- a/BUILD
++++ b/BUILD
+@@ -807,6 +807,7 @@ cc_library(
+         "-lrt",
+     ],
+     deps = IOQ3_COMMON_DEPS,
++    alwayslink = 1,
+ )
+ 
+ cc_library(
+@@ -826,6 +827,7 @@ cc_library(
+     defines = IOQ3_COMMON_DEFINES,
+     linkopts = ["-lOSMesa"],
+     deps = IOQ3_COMMON_DEPS,
++    alwayslink = 1,
+ )
+ 
+ cc_library(
+@@ -848,6 +850,7 @@ cc_library(
+         "-lX11",
+     ],
+     deps = IOQ3_COMMON_DEPS,
++    alwayslink = 1,
+ )
+ 
+ cc_library(
+@@ -870,6 +873,7 @@ cc_library(
+         "-lGL",
+     ],
+     deps = IOQ3_COMMON_DEPS + ["//third_party/GL/util:egl_util"],
++    alwayslink = 1,
+ )
+ 
+ cc_binary(
+diff --git a/WORKSPACE b/WORKSPACE
+index f2f7439..ed4308b 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -39,7 +39,7 @@ http_archive(
+ http_archive(
+     name = "jpeg_archive",
+     build_file = "@//:jpeg.BUILD",
+-    sha256 = "650250979303a649e21f87b5ccd02672af1ea6954b911342ea491f351ceb7122",
++    sha256 = "1e9793e1c6ba66e7e0b6e5fe7fd0f9e935cc697854d5737adec54d93e5b3f730",
+     strip_prefix = "jpeg-9c",
+     urls = ["http://www.ijg.org/files/jpegsrc.v9c.tar.gz"],
+ )
+@@ -103,11 +103,13 @@ http_archive(
+ new_local_repository(
+     name = "sdl_system",
+     build_file = "sdl.BUILD",
+-    path = "/usr",
++    #path = "/usr",
++    path = "conda_dir",
+ )
+ 
+ new_local_repository(
+     name = "python_system",
+     build_file = "python.BUILD",
+-    path = "/usr",
++    #path = "/usr",
++    path = "conda_dir",
+ )
+diff --git a/build.sh b/build.sh
+new file mode 100755
+index 0000000..24867cb
+--- /dev/null
++++ b/build.sh
+@@ -0,0 +1,27 @@
++if [[ -z "${CONDA_PREFIX}" ]]; then
++  echo "Activate conda env first."
++  exit 1
++fi
++
++if [ -e "pip_package" ]; then
++  echo "Clear pip_package directory."
++  exit 2
++fi
++
++sudo apt-get update
++sudo apt-get install -y xvfb libffi-dev gettext freeglut3-dev libsdl2-dev cmake zlib1g-dev libjpeg-dev libboost-all-dev gcc wget unzip git libosmesa6-dev
++wget https://launchpadlibrarian.net/201289896/libgcrypt11_1.5.3-2ubuntu4.2_amd64.deb || cp ../third_party/dmlab/libgcrypt11_1.5.3-2ubuntu4.2_amd64.deb .
++sudo apt-get install ./libgcrypt11_1.5.3-2ubuntu4.2_amd64.deb
++
++if [ -e "conda_dir" ]; then
++  rm conda_dir
++fi
++ln -s $CONDA_PREFIX conda_dir
++
++bazel build -c opt //:deepmind_lab.so
++bazel build -c opt python/pip_package:build_pip_package
++
++mkdir pip_package
++./bazel-bin/python/pip_package/build_pip_package "$(readlink -f ./pip_package)"
++pip install ./pip_package/DeepMind_Lab-1.0-py2-none-any.whl --force-reinstall
++
+diff --git a/python.BUILD b/python.BUILD
+index f0b3f9a..b20b193 100644
+--- a/python.BUILD
++++ b/python.BUILD
+@@ -5,7 +5,9 @@
+ 
+ cc_library(
+     name = "python",
+-    hdrs = glob(["include/python2.7/*.h"]),
+-    includes = ["include/python2.7"],
++    #hdrs = glob(["include/python2.7/*.h"]),
++    #includes = ["include/python2.7"],
++    hdrs = glob(["include/python2.7/*.h", "lib/python2.7/site-packages/numpy/core/include/**/*.h"]),
++    includes = ["include/python2.7", "lib/python2.7/site-packages/numpy/core/include"],
+     visibility = ["//visibility:public"],
+ )

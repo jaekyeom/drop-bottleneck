@@ -1,0 +1,12 @@
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+exp
+groups
+garbages
+slurm_outputs
+
+startup_script.sh
