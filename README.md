@@ -3,7 +3,7 @@
 ![overview](assets/db_overview.png)
 
 This is the code for our paper,
-* *[Jaekyeom Kim](https://jaekyeom.github.io/), Minjung Kim, Dongyeon Woo and [Gunhee Kim](http://vision.snu.ac.kr/gunhee/)*. Drop-Bottleneck: Learning Discrete Compressed Representation for Noise-Robust Exploration. In *ICLR*, 2021. [[openreview]](https://openreview.net/forum?id=1rxHOBjeDUW) 
+* *[Jaekyeom Kim](https://jaekyeom.github.io/), Minjung Kim, Dongyeon Woo and [Gunhee Kim](http://vision.snu.ac.kr/gunhee/)*. Drop-Bottleneck: Learning Discrete Compressed Representation for Noise-Robust Exploration. In *ICLR*, 2021. [[paper]](https://openreview.net/pdf?id=1rxHOBjeDUW) [[arxiv]](https://arxiv.org/abs/2103.12300) [[talk]](https://iclr.cc/virtual/2021/poster/3127)
 
 In the paper, we propose a novel information bottleneck (IB) method named Drop-Bottleneck, which discretely drops features that are irrelevant to the target variable.
 Drop-Bottleneck not only enjoys a simple and tractable compression objective but also additionally provides a deterministic compressed representation of the input variable, which is useful for inference tasks that require consistent representation.
