@@ -1,4 +1,7 @@
 # Drop-Bottleneck (DB)
+
+![overview](assets/db_overview.png)
+
 This is the code for our paper,
 * *[Jaekyeom Kim](https://jaekyeom.github.io/), Minjung Kim, Dongyeon Woo and [Gunhee Kim](http://vision.snu.ac.kr/gunhee/)*. Drop-Bottleneck: Learning Discrete Compressed Representation for Noise-Robust Exploration. In *ICLR*, 2021. [[openreview]](https://openreview.net/forum?id=1rxHOBjeDUW) 
 
